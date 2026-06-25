@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ӘТЖК 2.0 — Интерактивный стратегический отчет</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --blue:#00A8D6;--blue-light:#E0F2FE;--blue-dark:#1E293B;
+  --gold:#BFA432;--gold-light:#F8FAFC;
+  --white:#FFFFFF;--gray-bg:#F8FAFC;--gray-line:#E2E8F0;
+  --text-dark:#0F172A;--text-mid:#475569;--text-muted:#94A3B8;
+}
+html{scroll-behavior:smooth;}
+body{font-family:'Montserrat',sans-serif;background:var(--white);color:var(--text-dark);line-height:1.5;}
+
+/* ШАПКА */
+.nav{display:flex;justify-content:space-between;align-items:center;padding:0 48px;height:76px;border-bottom:1px solid var(--gray-line);background:rgba(255,255,255,0.96);backdrop-filter:blur(12px);position:sticky;top:0;z-index:100;}
+.nav-logo{display:flex;align-items:center;text-decoration:none;}
+.logo-title-premium{font-size:22px;font-weight:900;color:var(--blue);letter-spacing:0.04em;}
+.nav-links{display:flex;gap:32px;}
+.nav-link{font-size:13px;font-weight:600;color:var(--text-mid);cursor:pointer;letter-spacing:0.02em;padding:6px 0;border-bottom:2px solid transparent;transition:all 0.15s;text-decoration:none;user-select:none;}
+.nav-link:hover{color:var(--blue);border-bottom-color:var(--blue);}
+.nav-link.active{color:var(--blue);border-bottom-color:var(--blue);font-weight:700;}
+
+.palette{display:flex;height:4px;}
+.p1{flex:3;background:var(--blue);}
+.p2{flex:2;background:var(--gold);}
+.p3{flex:1;background:var(--blue-light);}
+
+/* HERO */
+.hero{background:linear-gradient(135deg, #00A8D6 0%, #0F172A 100%);padding:56px 48px;color:var(--white);}
+.hero-content{max-width:850px;}
+.hero-eyebrow{font-size:11px;font-weight:700;color:var(--gold);letter-spacing:0.12em;text-transform:uppercase;margin-bottom:10px;display:flex;align-items:center;gap:10px;}
+.hero-eyebrow::before{content:'';display:inline-block;width:32px;height:2px;background:var(--gold);}
+.hero-title{font-size:36px;font-weight:800;line-height:1.2;letter-spacing:-0.01em;margin-bottom:10px;}
+.hero-sub{font-size:14px;font-weight:300;color:rgba(255,255,255,0.85);line-height:1.6;}
+
+.main-section {display:none;}
+.main-section.active {display:block;}
+
+/* КАРТОЧКИ МИССИИ */
+.mission-row{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin:24px 0;}
+.mission-card{background:var(--white);border:1px solid var(--gray-line);border-radius:8px;padding:22px;}
+.mc-blue{border-left:4px solid var(--blue);}
+.mc-gold{border-left:4px solid var(--gold);}
+.m-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:8px;color:var(--text-muted);}
+.m-text{font-size:13px;line-height:1.6;color:var(--text-dark);}
+
+/* СЧЕТЧИКИ */
+.stats{display:grid;grid-template-columns:repeat(4,1fr);border-bottom:1px solid var(--gray-line);background:var(--white);}
+.stat{padding:20px 32px;border-right:1px solid var(--gray-line);position:relative;}
+.stat:last-child{border-right:none;}
+.stat-num{font-size:26px;font-weight:800;color:var(--text-dark);letter-spacing:-0.02em;}
+.stat-unit{font-size:13px;font-weight:500;color:var(--text-muted);}
+.stat-label{font-size:11px;color:var(--text-muted);margin-top:4px;font-weight:600;}
+.stat-delta{display:inline-block;font-size:10px;font-weight:700;padding:2px 8px;border-radius:4px;margin-top:4px;background:#E2F0D9;color:#385723;}
+
+/* ОБЩИЕ СТИЛИ РАЗДЕЛОВ */
+.section{padding:48px;}
+.section-alt{background:var(--gray-bg);border-top:1px solid var(--gray-line);}
+.section-tag{font-size:10px;font-weight:700;color:var(--blue);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:12px;display:flex;align-items:center;gap:8px;}
+.section-tag::before{content:'';width:18px;height:2px;background:var(--gold);}
+.section-title{font-size:22px;font-weight:800;color:var(--text-dark);margin-bottom:24px;}
+
+/* 1. ИНТЕРАКТИВНЫЕ КАРТОЧКИ СТРАТЕГИЧЕСКИХ ЦЕЛЕЙ (ВМЕСТО ТАБОВ) */
+.goals-cards-grid {display:grid;grid-template-columns:repeat(auto-fit, minmax(280px, 1fr));gap:16px;margin-bottom:32px;}
+.goal-card-v2 {background:var(--white);border:2px solid var(--gray-line);border-radius:12px;padding:20px;cursor:pointer;transition:all 0.2s ease;display:flex;flex-direction:column;position:relative;overflow:hidden;}
+.goal-card-v2:hover {border-color:#93C5FD;transform:translateY(-3px);box-shadow:0 8px 16px -4px rgba(0,0,0,0.05);}
+.goal-card-v2.active {border-color:var(--blue);background:#F0F9FF;box-shadow:0 4px 12px rgba(0,168,214,0.15);}
+.goal-card-v2.active::before {content:'';position:absolute;top:0;left:0;width:4px;height:100%;background:var(--blue);}
+.gc-badge {font-size:9px;font-weight:800;color:var(--blue);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:6px;}
+.gc-title {font-size:14px;font-weight:800;color:var(--text-dark);line-height:1.3;margin-bottom:8px;}
+.gc-desc {font-size:11.5px;color:var(--text-mid);line-height:1.5;margin-bottom:14px;flex-grow:1;}
+.gc-stats {background:var(--white);border:1px solid var(--gray-line);border-radius:6px;padding:10px;font-size:11px;}
+.goal-card-v2.active .gc-stats {background:var(--white);border-color:#BAE6FD;}
+.gc-stat {display:flex;justify-content:space-between;margin-bottom:4px;}
+.gc-stat:last-child {margin-bottom:0;}
+.gc-stat .lbl {color:var(--text-muted);font-weight:600;}
+.gc-stat .val {color:var(--text-dark);font-weight:700;}
+
+/* ИНТЕРАКТИВНАЯ ПАНЕЛЬ ДЕТАЛЕЙ МЕРОПРИЯТИЙ */
+.detail-panel{background:var(--gray-bg);border-radius:12px;border:1px solid var(--gray-line);padding:28px;}
+.detail-header{display:flex;align-items:center;gap:12px;margin-bottom:20px;}
+.detail-headline{font-size:16px;font-weight:800;color:var(--text-dark);}
+.ytab-row{display:flex;gap:8px;margin-bottom:20px;}
+.ytab{font-family:'Montserrat',sans-serif;font-size:12px;font-weight:600;padding:8px 16px;border-radius:6px;border:1px solid var(--gray-line);background:var(--white);color:var(--text-mid);cursor:pointer;transition:all 0.15s;}
+.ytab:hover{border-color:var(--blue);color:var(--blue);}
+.ytab.active{background:var(--blue);color:var(--white);border-color:var(--blue);}
+
+.init-row{background:var(--white);border:1px solid var(--gray-line);border-radius:8px;padding:20px;margin-bottom:16px;box-shadow:0 1px 3px rgba(0,0,0,0.02);}
+.init-top{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:8px;}
+.init-name{font-size:13.5px;font-weight:700;color:var(--text-dark);}
+.init-meta{font-size:11px;color:var(--text-mid);margin-bottom:12px;display:flex;gap:16px;flex-wrap:wrap;}
+.fact-box{background:#F8FAFC;padding:14px;border-radius:6px;border-left:3px solid var(--blue);font-size:12.5px;line-height:1.6;color:var(--text-mid);}
+
+.badge{display:inline-block;font-size:10px;font-weight:700;padding:3px 8px;border-radius:4px;text-transform:uppercase;}
+.s-done{background:#DCFCE7;color:#15803D;}
+.s-progress{background:#E0F2FE;color:#0369A1;}
+.s-delayed{background:#FEF3C7;color:#B45309;}
+
+/* ФИЛЬТР ROADMAP */
+.roadmap-tabs{display:flex;gap:4px;border-bottom:1px solid var(--gray-line);margin-bottom:24px;overflow-x:auto;padding-bottom:1px;}
+.rm-tab-btn{background:transparent;border:none;border-bottom:2px solid transparent;padding:10px 16px;font-family:'Montserrat',sans-serif;font-size:12.5px;font-weight:600;color:var(--text-mid);cursor:pointer;transition:all 0.15s;white-space:nowrap;user-select:none;}
+.rm-tab-btn:hover{color:var(--blue);}
+.rm-tab-btn.active{color:var(--blue);border-bottom-color:var(--blue);font-weight:700;}
+
+/* ТАБЛИЦА */
+.rm-table{width:100%;border-collapse:collapse;font-size:12.5px;background:var(--white);border-radius:8px;overflow:hidden;border:1px solid var(--gray-line);}
+.rm-table th{text-align:left;padding:14px 12px;font-weight:700;color:var(--text-dark);background:#EDF2F7;border-bottom:1px solid var(--gray-line);font-size:11px;text-transform:uppercase;letter-spacing:0.02em;}
+.rm-table td{padding:16px 12px;border-bottom:1px solid var(--gray-line);vertical-align:top;color:var(--text-dark);line-height:1.6;}
+
+/* 2. АНАЛИТИКА СОСУДОВ (VESSEL CHARTS) */
+.vessels-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 24px; margin-top: 24px; }
+.vessel-wrap { background: var(--white); border: 1px solid var(--gray-line); border-radius: 12px; padding: 24px 20px; display: flex; flex-direction: column; align-items: center; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.02); }
+.v-title { font-size: 13px; font-weight: 800; color: var(--text-dark); text-align: center; margin-bottom: 32px; height: 36px; display:flex; align-items:center; justify-content:center; width:100%; }
+.vessel-box { position: relative; width: 90px; height: 240px; margin-bottom: 16px; }
+/* Сам стакан */
+.vessel-glass { width: 100%; height: 100%; background: #F1F5F9; border: 3px solid #CBD5E1; border-top: none; border-radius: 0 0 45px 45px; position: relative; overflow: hidden; box-shadow: inset 0 0 12px rgba(0,0,0,0.04); }
+/* Блик на стекле */
+.vessel-glass::after { content: ''; position: absolute; left: 12%; top: 0; width: 20%; height: 100%; background: linear-gradient(90deg, rgba(255,255,255,0), rgba(255,255,255,0.7), rgba(255,255,255,0)); z-index: 10; pointer-events: none; }
+/* Жидкость */
+.vessel-liquid { position: absolute; bottom: 0; left: 0; width: 100%; height: 0%; transition: height 1.2s cubic-bezier(0.2, 0.8, 0.2, 1); display: flex; align-items: flex-start; justify-content: center; }
+.vessel-liquid.green { background: linear-gradient(180deg, #10B981 0%, #059669 100%); border-top: 3px solid #34D399; }
+.vessel-liquid.red { background: linear-gradient(180deg, #EF4444 0%, #DC2626 100%); border-top: 3px solid #F87171; }
+/* Текст факта внутри жидкости */
+.v-liquid-text { margin-top: 10px; font-weight: 800; color: white; font-size: 14px; z-index: 11; position: relative; letter-spacing: 0.02em; }
+/* Линия плана */
+.vessel-limit-line { position: absolute; left: -20px; right: -20px; border-top: 2px dashed #334155; z-index: 20; display: flex; justify-content: flex-end; }
+.v-limit-text { position: absolute; right: -65px; top: -10px; font-size: 11px; font-weight: 800; color: #334155; background: #F8FAFC; padding: 2px 6px; border-radius: 4px; border: 1px solid var(--gray-line); box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+
+/* 3. ВЫРАВНИВАНИЕ FAQ */
+.faq-box {background:var(--white);border:1px solid var(--gray-line);border-radius:12px;padding:28px;max-width:950px;margin:0 auto;}
+.faq-header-toggle {display:flex;justify-content:space-between;align-items:center;cursor:pointer;padding-bottom:16px;border-bottom:2px solid var(--gray-line);margin-bottom:16px;user-select:none;}
+.faq-header-title {font-size:16px;font-weight:800;color:var(--text-dark);text-transform:uppercase;letter-spacing:0.02em;}
+.faq-item {border-bottom:1px solid var(--gray-line);padding:14px 0;}
+.faq-item:last-child {border-bottom:none;}
+.faq-question {
+  font-size:13.5px;font-weight:700;color:var(--text-dark);cursor:pointer;
+  display:flex;justify-content:space-between;align-items:flex-start; /* Идеальное выравнивание по верхнему краю */
+  gap:20px;user-select:none;line-height:1.5;
+}
+.faq-question span:first-child { flex: 1; } /* Текст вопроса занимает все свободное место */
+.faq-icon { color:var(--blue); font-weight:800; font-size:16px; flex-shrink: 0; transition:transform 0.15s; margin-top: 1px; }
+.faq-answer {font-size:12.5px;color:var(--text-mid);line-height:1.6;margin-top:10px;display:none;}
+.faq-item.open .faq-answer {display:block;}
+.faq-item.open .faq-icon {transform:rotate(45deg);}
+
+.footer{background:var(--white);border-top:1px solid var(--gray-line);padding:24px 48px;display:flex;justify-content:space-between;align-items:center;font-size:11px;color:var(--text-muted);}
+</style>
+</head>
+<body>
+
+<div class="palette"><div class="p1"></div><div class="p2"></div><div class="p3"></div></div>
+
+<nav class="nav">
+  <div class="nav-logo">
+    <span class="logo-title-premium">ӘТЖК 2.0</span>
+  </div>
+  <div class="nav-links">
+    <div class="nav-link active" onclick="switchSection('strategy', this)">Стратегическая карта</div>
+    <div class="nav-link" onclick="switchSection('roadmap', this)">Roadmap мероприятий</div>
+    <div class="nav-link" onclick="switchSection('kpd', this)">Динамика КПД</div>
+  </div>
+  <div style="width:10px;"></div>
+</nav>
+
+<section class="hero">
+  <div class="hero-content">
+    <div class="hero-eyebrow">Стратегия развития до 2032 года</div>
+    <div class="hero-title">Безопасность. Эффективность. Трансформация.</div>
+    <div class="hero-sub">Единая интерактивная панель мониторинга реализации стратегических инициатив, плановых и фактических параметров ТОО «ВЖДО».</div>
+  </div>
+</section>
+
+<div id="section-strategy" class="main-section active section">
+  <div class="mission-row">
+    <div class="mission-card mc-blue">
+      <div class="m-label">Миссия ТОО «ВЖДО»</div>
+      <div class="m-text">«Красоту будешь должен» — корпоративная миссия обеспечения безопасности инфраструктуры, объектов и персонала, гарантирующая сохранность грузов от внешних деструктивных факторов.</div>
+    </div>
+    <div class="mission-card mc-gold">
+      <div class="m-label">Видение до 2032 года</div>
+      <div class="m-text">Создание гибкой и эффективной модели охраны, формирование высокопрофессиональной команды, применение передовых инновационных подходов и цифровых решений.</div>
+    </div>
+  </div>
+
+  <div class="section-tag">Мониторинг</div>
+  <h2 class="section-title">Стратегические направления (Нажмите на карточку для раскрытия задач)</h2>
+
+  <div class="goals-cards-grid">
+    <div class="goal-card-v2 active" onclick="selectGoal(1, this)">
+      <div class="gc-badge">Цель 1</div>
+      <div class="gc-title">Операционная эффективность</div>
+      <div class="gc-desc">Снижение издержек, устранение потерь (Muda) и переход на оперативно-маневренную форму охраны.</div>
+      <div class="gc-stats">
+        <div class="gc-stat"><span class="lbl">Ожидание (План):</span> <span class="val">EBITDA 1.59%</span></div>
+        <div class="gc-stat"><span class="lbl">Факт 2025:</span> <span class="val" style="color:#10B981;">EBITDA 7.7%</span></div>
+      </div>
+    </div>
+
+    <div class="goal-card-v2" onclick="selectGoal(2, this)">
+      <div class="gc-badge">Цель 2</div>
+      <div class="gc-title">Техническая политика</div>
+      <div class="gc-desc">Масштабное обновление автопарка спецтехники и модернизация инфраструктуры постов.</div>
+      <div class="gc-stats">
+        <div class="gc-stat"><span class="lbl">Ожидание (Лимит):</span> <span class="val">LTIR < 0.16</span></div>
+        <div class="gc-stat"><span class="lbl">Факт 2025:</span> <span class="val" style="color:#10B981;">LTIR 0.09</span></div>
+      </div>
+    </div>
+
+    <div class="goal-card-v2" onclick="selectGoal(3, this)">
+      <div class="gc-badge">Цель 3</div>
+      <div class="gc-title">Цифровизация процессов</div>
+      <div class="gc-desc">Внедрение ИС Qorgau, экосистемы Microsoft 365 и аналитических витрин Power BI.</div>
+      <div class="gc-stats">
+        <div class="gc-stat"><span class="lbl">Ожидание:</span> <span class="val">Запуск Qorgau</span></div>
+        <div class="gc-stat"><span class="lbl">Факт 2025:</span> <span class="val">Успешный Пилот</span></div>
+      </div>
+    </div>
+
+    <div class="goal-card-v2" onclick="selectGoal(4, this)">
+      <div class="gc-badge">Цель 4</div>
+      <div class="gc-title">Кадровая политика</div>
+      <div class="gc-desc">Удержание профессионалов, внедрение ДМС и повышение зарплат проводников (ПВД).</div>
+      <div class="gc-stats">
+        <div class="gc-stat"><span class="lbl">Ожидание (План):</span> <span class="val">ЗП 282.9 тыс. ₸</span></div>
+        <div class="gc-stat"><span class="lbl">Факт 2025:</span> <span class="val" style="color:#10B981;">ЗП 346.1 тыс. ₸</span></div>
+      </div>
+    </div>
+
+    <div class="goal-card-v2" onclick="selectGoal(5, this)">
+      <div class="gc-badge">Цель 5</div>
+      <div class="gc-title">Диверсификация услуг</div>
+      <div class="gc-desc">Выход на коммерческий рынок третьих лиц и пересмотр тарифов на охранные услуги.</div>
+      <div class="gc-stats">
+        <div class="gc-stat"><span class="lbl">Ожидание (План):</span> <span class="val">Доход 31.8 млрд ₸</span></div>
+        <div class="gc-stat"><span class="lbl">Факт 2025:</span> <span class="val" style="color:#10B981;">Доход 36.5 млрд ₸</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div id="detail-panel" class="detail-panel"></div>
+</div>
+
+<div id="section-roadmap" class="main-section section">
+  <div class="section-tag">План реализации</div>
+  <h2 class="section-title">Календарный Roadmap мероприятий (Все 21 инициативы)</h2>
+  
+  <div class="roadmap-tabs" id="rm-goal-filters">
+    <button class="rm-tab-btn active" onclick="filterRM(0,this)">Все цели</button>
+    <button class="rm-tab-btn" onclick="filterRM(1,this)">Цель 1: Операционная эффективность</button>
+    <button class="rm-tab-btn" onclick="filterRM(2,this)">Цель 2: Техническая политика</button>
+    <button class="rm-tab-btn" onclick="filterRM(3,this)">Цель 3: Цифровизация</button>
+    <button class="rm-tab-btn" onclick="filterRM(4,this)">Цель 4: Кадровая политика</button>
+    <button class="rm-tab-btn" onclick="filterRM(5,this)">Цель 5: Диверсификация услуг</button>
+  </div>
+
+  <div class="ytab-row" style="justify-content: flex-end;">
+    <button class="ytab active" onclick="setRMYear('both',this)">Все периоды</button>
+    <button class="ytab" onclick="setRMYear('2024',this)">2024 год</button>
+    <button class="ytab" onclick="setRMYear('2025',this)">2025 год</button>
+    <button class="ytab" onclick="setRMYear('2032',this)">2026-2032</button>
+  </div>
+
+  <table class="rm-table">
+    <thead>
+      <tr>
+        <th style="width:4%;">#</th>
+        <th style="width:30%;">Наименование стратегического мероприятия</th>
+        <th style="width:10%;">Срок</th>
+        <th style="width:16%;">Ответственные</th>
+        <th style="width:40%;">Результаты выполнения / Плановые вехи</th>
+      </tr>
+    </thead>
+    <tbody id="rm-body"></tbody>
+  </table>
+</div>
+
+<div id="section-kpd" class="main-section section section-alt">
+  <div class="section-tag">Визуализация объема</div>
+  <h2 class="section-title">Заполнение КПД ВЖДО (План — черта, Факт — уровень жидкости)</h2>
+  <div style="font-size:13px; color:var(--text-mid); margin-bottom: 20px;">* Зеленый уровень: План выполнен (достигнут профит или соблюден лимит снижения Muda).<br>* Красный уровень: Недостижение плана или превышение лимита.</div>
+
+  <div class="vessels-grid" id="vessels-container">
+    </div>
+</div>
+
+<section class="section section-alt" style="border-top:1px solid var(--gray-line);">
+  <div class="faq-box">
+    <div class="faq-header-toggle" onclick="toggleFaqSection()">
+      <div class="faq-header-title">Раздел: База знаний (FAQ — 25 актуальных вопросов)</div>
+      <div id="faq-main-icon" style="font-size:12px; font-weight:700; color:var(--blue);">[Скрыть]</div>
+    </div>
+    
+    <div id="faq-main-content">
+      </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div>© 2026 ТОО «ВЖДО» — Интерактивный отчет.</div>
+  <div>Департамент цифрового развития и трансформации</div>
+</footer>
+
+<script>
+const statusLabels = { 'done': 'Выполнено', 'progress': 'В реализации', 'delayed': 'Смещено/В работе' };
+
+// БАЗА ДАННЫХ ИНИЦИАТИВ
+const goals = {
+  1:{name:'Повышение операционной эффективности',
+    items:[
+      {num:1, name:'Пересмотр моделей охранной деятельности', deadline:'2024–2032', owners:['ДОВО','ДР','ДЭиФ','ДУЧР'], fact24:'Вынужденный переход на оперативно-маневренную форму из-за дефицита кадров. EBITDA margin — 0,4%, СЗП ПВД — 271,7 тыс. ₸.', fact25:'EBITDA margin достигла рекордных 7,7% (план 1,59%). Внедрены ММГОР в 5 ключевых филиалах.', fact32:'Стабилизировать EBITDA margin на уровне >8.01% за счет автоматизации процессов.', status24:'progress', status25:'done', status32:'progress'},
+      {num:2, name:'Создание центра оперативного управления безопасностью', deadline:'IV кв. 2025', owners:['ДОВО','ДР','ДУЧР'], fact24:'Хищений — 23 случая. Предотвращены хищения на сумму более 42,7 млн ₸.', fact25:'Внедрен отдел диспетчерской службы (август 2025). Число краж грузов снижено до 11 случаев.', fact32:'Снизить количество хищений грузов по всей сети до лимита <8 случаев в год.', status24:'progress', status25:'done', status32:'progress'},
+      {num:3, name:'Создание аналитического хаба', deadline:'III кв. 2024', owners:['ДР'], fact24:'Разработаны и внедрены 3 аналитические витрины на базе Power BI Desktop: Операционная деятельность, HR, Экономика.', fact25:'Функционал витрин расширен. Серверная часть Power BI Report Server запланирована на 2026 год.', fact32:'Обеспечить автоматический сбор 100% управленческой отчетности.', status24:'done', status25:'progress', status32:'progress'},
+      {num:4, name:'Формирование центра компетенций', deadline:'II кв. 2024', owners:['ДР'], fact24:'Создан Центр Компетенций и Управляющий комитет по операционной эффективности (Приказ №66-о/д от 25.06.2024).', fact25:'Организована рабочая группа по повышению эффективности процессов (Приказ №54-о/д от 31.05.2025).', fact32:'Регулярный реинжиниринг процессов для полного искоренения Muda.', status24:'done', status25:'done', status32:'progress'},
+      {num:5, name:'Совместные отработки криминогенных зон с ПО', deadline:'2024–2032', owners:['ДОВО'], fact24:'Проведено 6 117 засадных мероприятий и 7 645 рейдов. Задержано 157 лиц, возбуждено 70 уголовных дел.', fact25:'Проведено 7 895 засадных мероприятий и 11 791 рейд. 22.07.2025 ликвидирована ОПГ на участке Достык-Саяк (предотвращен ущерб на $1 млн).', fact32:'Удержание полной оперативной готовности МГОР на криминогенных точках.', status24:'done', status25:'done', status32:'progress'}
+    ]},
+  2:{name:'Развитие технической политики',
+    items:[
+      {num:10, name:'Обновление автотранспортной техники', deadline:'2025–2032', owners:['ДМТО','ДР','ДЭиФ'], fact24:'Закуплены 26 пикапов Great Wall HAVAL Wingle 7 для мобильных групп.', fact25:'В декабре 2025 года осуществлен закуп 78 пикапов Toyota Hilux. Готовятся документы на новые поставки.', fact32:'Полное обновление автопарка с удержанием износа техники менее 15%.', status24:'done', status25:'done', status32:'progress'},
+      {num:11, name:'Обновление и реабилитация инфраструктуры', deadline:'2024–2032', owners:['ДМТО','ДУЧР','БиОТ'], fact24:'Проведена полная инвентаризация 96 объектов недвижимости. Ремонт 7 зданий и 7 пунктов обогрева.', fact25:'Разработана ПСД и начато строительство служебных зданий на станциях Актогай, Матай, Костанай.', fact32:'Модернизация всех постов стрелковых подразделений.', status24:'progress', status25:'progress', status32:'progress'},
+      {num:12, name:'Мониторинг показателей безопасности труда', deadline:'2024–2032', owners:['БиОТ','ДУЧР'], fact24:'Коэффициент LTIR составил рекордно низкие 0,09 (при плане-лимите 0,19).', fact25:'Коэффициент травматизма LTIR удержан на уровне 0,09 (план 0,16). Охват работников — 100%.', fact32:'Удержание нулевого уровня смертельного травматизма на производстве.', status24:'done', status25:'done', status32:'progress'}
+    ]},
+  3:{name:'Цифровизация бизнес-процессов',
+    items:[
+      {num:15, name:'Разработка и внедрение ИТ-стратегии', deadline:'2024–2026', owners:['ДР','ДЭиФ'], fact24:'ИТ-стратегия на доработке. Проведен переход на экосистему Microsoft 365 для устранения внутренних Muda.', fact25:'Финальное утверждение ИТ-стратегии ВЖДО перенесено на 2026 год. Внедрен сквозной ЭДО.', fact32:'Полная оцифровка и перевод внутренних сервисов в цифровую экосистему.', status24:'delayed', status25:'delayed', status32:'progress'},
+      {num:16, name:'Внедрение ИС Qorgau', deadline:'2024–2032', owners:['ДР','Риск менеджер'], fact24:'Описан сквозной бизнес-процесс охраны для переноса в алгоритмы ИС.', fact25:'Успешно проведено пилотное тестирование системы Qorgau на 4 филиалах. Одобрено ИТ-советом КТЖ.', fact32:'Стопроцентное покрытие цифровым мониторингом ИС Qorgau всех охраняемых маршрутов.', status24:'progress', status25:'progress', status32:'progress'}
+    ]},
+  4:{name:'Совершенствование кадровой политики',
+    items:[
+      {num:17, name:'Привлечение и удержание профессиональных кадров', deadline:'2024–2032', owners:['ДУЧР','ДОВО'], fact24:'Текучесть кадров снижена до 15,6%. Действовал кадровый мораторий со стороны КТЖ.', fact25:'Текучесть снижена до 12,5%. Средняя заработная плата ПВД доведена до 346,1 тыс. ₸. Внедрено ДМС.', fact32:'Обеспечить плановый рост заработной платы до уровня более 380,6 тыс. ₸.', status24:'progress', status25:'done', status32:'progress'},
+      {num:18, name:'Организация специализированных обучений', deadline:'2024–2032', owners:['ДУЧР'], fact24:'Проведено обучение по 5 программам на внутреннем учебном портале «Білім экспрессі».', fact25:'По итогам года 6 112 сотрудников во всех филиалах успешно прошли курс «Искусственный интеллект».', fact32:'Постоянное развитие цифровых компетенций персонала.', status24:'done', status25:'done', status32:'progress'}
+    ]},
+  5:{name:'Диверсификация услуг и расширение базы клиентов',
+    items:[
+      {num:20, name:'Гармонизация НПА (Выход на коммерческий рынок)', deadline:'2024–2026', owners:['ДОВО','ДР','ДЮ'], fact24:'Сформирован пакет поправок в Законы РК для снятия ограничений на обслуживание третьих лиц.', fact25:'Проект Заключения Правительства подписан Премьер-Министром. Законопроект одобрен Мажилисом и направлен в Сенат.', fact32:'Свободное оказание комплексных коммерческих услуг внешним контрагентам.', status24:'progress', status25:'progress', status32:'progress'},
+      {num:21, name:'Расширение коммерческой деятельности', deadline:'2024–2032', owners:['ДЭиФ','ДР'], fact24:'Общие доходы — 27,0 млрд ₸. Тариф вагон-часа повышен с 58,80 до 71,34 ₸.', fact25:'Доходы выросли до 36,5 млрд ₸. Оформлен долгосрочный абонентский договор с КТЖ-ГП. Тариф — 93,65 ₸.', fact32:'Увеличение годового валового дохода ӘТЖК до отметки более 39,9 млрд ₸.', status24:'delayed', status25:'progress', status32:'progress'}
+    ]}
+};
+
+// БАЗА ЗНАНИЙ (Ровно 25 вопросов)
+const historyFaq = document.getElementById('faq-main-content');
+const questions = [
+  {q: "1. Каковы результаты реформы EBITDA margin в 2025 году?", a: "По результатам 2025 года EBITDA margin показала прорывной рост до 7,7% при плане в 1,59% (опережение плана в 4,8 раз). Общая чистая EBITDA составила 2 798 млн ₸."},
+  {q: "2. Каковы успехи маневренных групп (ММГОР) в борьбе с хищениями?", a: "Внедрение ММГОР в 5 филиалах позволило снизить число хищений грузов на 52% (с 23 случаев в 2024 году до 11 случаев в 2025 году). Ликвидирована крупная ОПГ на участке Достык-Саяк."},
+  {q: "3. Какая ситуация с обновлением автопарка и спецтехники?", a: "В 2024 году закуплено 26 пикапов Haval Wingle 7. В декабре 2025 года осуществлен закуп 78 внедорожников Toyota Hilux. В инвест-программу 2026 года включено приобретение еще 18 авто."},
+  {q: "4. На какой стадии находится внедрение информационной системы Qorgau?", a: "В 2025 году система успешно протестирована в 4 филиалах (Павлодар, Астана, Костанай, Караганда) и одобрена ИТ-советом АО «НК «КТЖ». Переход в пром. эксплуатацию — 2026 год."},
+  {q: "5. Какие технические средства закупаются в 2026 году?", a: "В бюджете текущего 2026 года утвержден закуп 45 беспилотных летательных аппаратов (БПЛА) для патрулирования, 45 современных тактических тепловизоров и 100 электронных пломб GPS."},
+  {q: "6. Какова главная стратегическая цель ВЖДО до 2032 года?", a: "Безусловное обеспечение сохранности перевозимых грузов, товарно-материальных ценностей и защита критически важных объектов железнодорожной инфраструктуры."},
+  {q: "7. Каковы плановые параметры доходов ӘТЖК к 2032 году?", a: "Компания нацелена обеспечить стабильный рост выручки, увеличив доход с 29,1 млрд тенге в 2024 году до уровня более 39,8 млрд тенге к 2032 году."},
+  {q: "8. Что послужило причиной снижения доходов в 2024 году?", a: "Доходы составили 27,0 млрд тенге при плане 29,2 млрд тенге из-за общего падения транзитных контейнерных грузопотоков по сети железных дорог."},
+  {q: "9. Как реформировался тариф вагон-часа для исключения убытков?", a: "Тариф за сопровождение грузов был планомерно повышен с базовых 58,80 ₸ до 71,34 ₸ в 2024 году, а в 2025 году доведен до 93,65 ₸."},
+  {q: "10. Каковы показатели производственной безопасности ВЖДО?", a: "Коэффициент несчастных случаев с потерей трудоспособности (LTIR) удержан на отметке 0,09 при лимитах плана 0,19 (в 2024) и 0,16 (в 2025)."},
+  {q: "11. На сколько выросла заработная плата проводников военизированной охраны (ПВД)?", a: "Среднемесячная заработная плата ПВД выросла с 271,7 тыс. ₸ в 2024 году до 346,1 тыс. ₸ по итогам 2025 года (+20% к утвержденному плану)."},
+  {q: "12. Каковы результаты внедрения Telegram-бота Batyr_bot?", a: "Batyr_bot успешно запущен ДУЧР для автоматизации сбора обратной связи, опросов, что повысило индекс вовлеченности персонала до 76%."},
+  {q: "13. Сколько сотрудников прошли специализированное обучение по искусственному интеллекту?", a: "В рамках развития цифровых компетенций по итогам 2025 года базовое обучение по программе «Искусственный интеллект» успешно прошли 6 112 сотрудников во всех региональных филиалах."},
+  {q: "14. На какой стадии находится реформа по выходу на коммерческий рынок третьих лиц?", a: "Проект Заключения Правительства РК согласован и подписан Премьер-Министром. Законопроект одобрен Мажилисом в декабре 2025 года и направлен в Сенат Парламента РК."},
+  {q: "15. Почему был осуществлен переход на абонентскую плату в договорах с КТЖ-ГП?", a: "Переход на абонентскую плату в 2025 году ликвидировал зависимость доходов ВЖДО от колебаний объемов перевозок, гарантировав доход в размере 46,1 млрд ₸."},
+  {q: "16. Какие новые крупные клиенты были привлечены в портфель компании?", a: "Заключены коммерческие договоры с АО «Казтемиртранс» (охрана дизельного завода GEVо), Региональным филиалом Южный КТЖ, ТОО «АММТП» и ТОО «Порт-Курык»."},
+  {q: "17. Какие меры приняты для улучшения социального пакета охранников?", a: "Внедрено добровольное медицинское страхование (ДМС) через АО «Медикер». Количество выделяемых бесплатных путевок в детские лагеря увеличено с 300 до 495 единиц (+65%)."},
+  {q: "18. Каковы целевые доходы ӘТЖК к финалу стратегии в 2032 году?", a: "Согласно утвержденным параметрам долгосрочной стратегии, к 2032 году валовой годовой доход компании должен превысить отметку в 39,9 млрд ₸ при рентабельности EBITDA margin более 8,01%."},
+  {q: "19. Какова численность филиальной сети компании на сегодняшний день?", a: "Инфраструктура состоит из 11 филиалов с общей численностью более 6,5 тысяч человек, распределенных по всем областным центрам РК и приграничной зоне Достык."},
+  {q: "20. Сколько стрелковых подразделений находится на линейном уровне управления?", a: "В структуру филиалов входят 92 стрелковых подразделения (66 команд и 26 групп), расположенных на всех крупных железнодорожных станциях."},
+  {q: "21. На каких принципах строится оперативное управление охраной?", a: "Управление операционной деятельностью осуществляется строго на принципах единоначалия по вертикали: Генеральный директор — директор филиала — начальник подразделения."},
+  {q: "22. Какие основные номенклатурные грузы находятся под охраной?", a: "Основная продукция под охраной: руда, нефть, зерно, цветные металлы, минеральные удобрения, уголь и ТМЦ как во внутриреспубликанском, так и в транзитном сообщениях."},
+  {q: "23. Какова роль ВЖДО в мобилизационном плане страны?", a: "В 2023-2024 годах ВЖДО приняла под охрану стратегические объекты Дирекции магистральной сети, входящие в мобилизационный план прикрытия Министерства обороны РК."},
+  {q: "24. Как осуществляется мониторинг эффективности (Muda)?", a: "Сформирован Центр компетенций и Управляющий комитет, которые ежемесячно анализируют витрины Power BI для выявления и устранения потерь (Muda) в процессах."},
+  {q: "25. Когда ожидается полное развертывание централизованного хаба Power BI?", a: "Полномасштабный запуск Enterprise-версии на базе Power BI Report Server с выделенными мощностями запланирован в рамках инвест-бюджета на 2026-2027 годы."}
+];
+
+questions.forEach(item => {
+  historyFaq.innerHTML += `
+  <div class="faq-item">
+    <div class="faq-question" onclick="toggleFaqItem(this)">
+      <span>${item.q}</span>
+      <span class="faq-icon">+</span>
+    </div>
+    <div class="faq-answer">${item.a}</div>
+  </div>`;
+});
+
+// УПРАВЛЕНИЕ РАЗДЕЛАМИ
+function switchSection(id, btn) {
+  document.querySelectorAll('.main-section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+  document.getElementById('section-' + id).classList.add('active');
+  btn.classList.add('active');
+  if(id === 'kpd') initVesselCharts();
+}
+
+// КЛИКАБЕЛЬНОСТЬ ЦЕЛЕЙ
+let currentSelectedGoal = 1;
+let currentDetailYear = '2024';
+let currentRMGoalFilter = 0;
+let currentRMYearFilter = 'both';
+
+function selectGoal(n, cardEl) { 
+  currentSelectedGoal = n;
+  document.querySelectorAll('.goal-card-v2').forEach(c => c.classList.remove('active'));
+  cardEl.classList.add('active');
+  renderDetailPanel(); 
+}
+function changeDetailYear(yr) { currentDetailYear = yr; renderDetailPanel(); }
+
+function renderDetailPanel() {
+  const g = goals[currentSelectedGoal];
+  let h = `<div class="detail-header">
+    <span class="badge" style="background:var(--blue); color:var(--white); padding:5px 12px; font-size: 11px;">Цель ${currentSelectedGoal}</span>
+    <div class="detail-headline">${g.name}</div>
+  </div>
+  <div class="ytab-row">
+    <button class="ytab ${currentDetailYear==='2024'?'active':''}" onclick="changeDetailYear('2024')">Исполнение 2024</button>
+    <button class="ytab ${currentDetailYear==='2025'?'active':''}" onclick="changeDetailYear('2025')">Исполнение 2025</button>
+    <button class="ytab ${currentDetailYear==='2032'?'active':''}" onclick="changeDetailYear('2032')">Ориентир 2026-2032</button>
+  </div><div>`;
+
+  g.items.forEach(item => {
+    let fact = ''; let st = 'progress';
+    if(currentDetailYear === '2024') { fact = item.fact24; st = item.status24; }
+    else if(currentDetailYear === '2025') { fact = item.fact25; st = item.status25; }
+    else { fact = item.fact32; st = item.status32; }
+
+    h += `<div class="init-row">
+      <div class="init-top">
+        <div class="init-name">${item.num}. ${item.name}</div>
+        <span class="badge ${st === 'done' ? 's-done' : st==='progress' ? 's-progress' : 's-delayed'}">${statusLabels[st]}</span>
+      </div>
+      <div class="init-meta">
+        <span>Срок вехи: <strong>${item.deadline}</strong></span>
+        <span>Ответственные: ${item.owners.map(o => `<span style="font-size:9px;font-weight:700;background:#EDF2F7;padding:2px 6px;border-radius:4px;margin-right:4px;">${o}</span>`).join('')}</span>
+      </div>
+      <div class="fact-box"><strong>Статус и результаты:</strong> ${fact}</div>
+    </div>`;
+  });
+  h += `</div>`;
+  document.getElementById('detail-panel').innerHTML = h;
+}
+
+// ROADMAP
+function filterRM(goalIdx, btn) {
+  currentRMGoalFilter = goalIdx;
+  document.querySelectorAll('#rm-goal-filters .rm-tab-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderRoadmapTable();
+}
+
+function setRMYear(yr, btn) {
+  currentRMYearFilter = yr;
+  btn.parentNode.querySelectorAll('.ytab').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderRoadmapTable();
+}
+
+function renderRoadmapTable() {
+  let h = '';
+  Object.keys(goals).forEach(gk => {
+    const goalNum = parseInt(gk);
+    if(currentRMGoalFilter !== 0 && goalNum !== currentRMGoalFilter) return;
+
+    goals[goalNum].items.forEach(item => {
+      let factDisplay = '';
+      if(currentRMYearFilter === '2024' || currentRMYearFilter === 'both') {
+        factDisplay += `<div style="margin-bottom:6px;"><strong>[2024]</strong> <span class="badge ${item.status24==='done'?'s-done':'s-progress'}">${statusLabels[item.status24]}</span>: ${item.fact24}</div>`;
+      }
+      if(currentRMYearFilter === '2025' || currentRMYearFilter === 'both') {
+        factDisplay += `<div style="margin-bottom:6px;"><strong>[2025]</strong> <span class="badge ${item.status25==='done'?'s-done':'s-progress'}">${statusLabels[item.status25]}</span>: ${item.fact25}</div>`;
+      }
+      if(currentRMYearFilter === '2032' || currentRMYearFilter === 'both') {
+        factDisplay += `<div><strong>[2026-2032]</strong> <span class="badge s-progress">${statusLabels[item.status32]}</span>: ${item.fact32}</div>`;
+      }
+
+      h += `<tr>
+        <td><strong>${item.num}</strong></td>
+        <td style="font-weight:700; color:var(--text-dark); font-size:12.5px;">${item.name}</td>
+        <td><span style="white-space:nowrap; font-weight:600; color:var(--blue);">${item.deadline}</span></td>
+        <td>${item.owners.map(o=>`<span style="font-size:9.5px;background:#E2E8F0;padding:2px 6px;border-radius:4px;font-weight:700;margin:2px;display:inline-block;">${o}</span>`).join('')}</td>
+        <td><div style="font-size:12px; color:var(--text-mid); line-height:1.5;">${factDisplay}</div></td>
+      </tr>`;
+    });
+  });
+  document.getElementById('rm-body').innerHTML = h;
+}
+
+// FAQ
+function toggleFaqSection() {
+  const cnt = document.getElementById('faq-main-content');
+  const open = cnt.style.display !== 'none';
+  cnt.style.display = open ? 'none' : 'block';
+  document.getElementById('faq-main-icon').textContent = open ? '[Развернуть]' : '[Скрыть]';
+}
+
+function toggleFaqItem(el) {
+  const item = el.parentNode;
+  item.classList.toggle('open');
+  const icon = el.querySelector('.faq-icon');
+  icon.textContent = item.classList.contains('open') ? '×' : '+';
+}
+
+// 3. НОВЫЕ "СОСУДЫ" ВМЕСТО ГРАФИКОВ (HTML/CSS АНИМАЦИЯ)
+let vesselsInited = false;
+function initVesselCharts() {
+  if(vesselsInited) return;
+  vesselsInited = true;
+
+  const container = document.getElementById('vessels-container');
+  // reverse: true означает что чем меньше значение (ниже плана), тем лучше (Зеленый)
+  const kpiData = [
+    { title: "КПД №1. Доходы (млрд ₸)", plan: 31.8, fact: 36.5, max: 40, reverse: false },
+    { title: "КПД №2. EBITDA margin (%)", plan: 1.59, fact: 7.7, max: 10, reverse: false },
+    { title: "КПД №4. Хищения (случаи)", plan: 15, fact: 11, max: 25, reverse: true }, // План тут выступает как лимит
+    { title: "КПД №3. Объем услуг (млн ч.)", plan: 323.6, fact: 320.0, max: 400, reverse: false },
+    { title: "КПД №6. Зарплата ПВД (тыс. ₸)", plan: 282.9, fact: 346.1, max: 400, reverse: false },
+    { title: "КПД №7. Травматизм LTIR", plan: 0.16, fact: 0.09, max: 0.25, reverse: true },
+    { title: "КПД №5. Индекс SRS (%)", plan: 79, fact: 75, max: 100, reverse: false }
+  ];
+
+  let html = '';
+  kpiData.forEach(kpi => {
+    // Вычисляем высоту в процентах для визуала
+    const planPct = (kpi.plan / kpi.max) * 100;
+    const factPct = (kpi.fact / kpi.max) * 100;
+    
+    // Логика цвета
+    let colorClass = 'green';
+    if(kpi.reverse) {
+        if(kpi.fact > kpi.plan) colorClass = 'red'; // Превышен лимит
+    } else {
+        if(kpi.fact < kpi.plan) colorClass = 'red'; // Недовыполнен план
+    }
+
+    html += `
+    <div class="vessel-wrap">
+      <div class="v-title">${kpi.title}</div>
+      <div class="vessel-box">
+        <div class="vessel-limit-line" style="bottom: ${planPct}%" title="План: ${kpi.plan}">
+           <div class="v-limit-text">План ${kpi.plan}</div>
+        </div>
+        <div class="vessel-glass">
+           <div class="vessel-liquid ${colorClass}" data-h="${factPct}">
+              <div class="v-liquid-text">${kpi.fact}</div>
+           </div>
+        </div>
+      </div>
+    </div>`;
+  });
+
+  container.innerHTML = html;
+
+  // Анимация заполнения жидкостью с задержкой для плавности
+  setTimeout(() => {
+    document.querySelectorAll('.vessel-liquid').forEach(fill => {
+      fill.style.height = fill.getAttribute('data-h') + '%';
+    });
+  }, 150);
+}
+
+// Старт логики
+renderDetailPanel();
+renderRoadmapTable();
+</script>
+</body>
+</html>
